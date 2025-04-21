@@ -92,7 +92,8 @@ export const onDiscordConnect = async (
 }
 
 export const getDiscordConnectionUrl = async () => {
-  const user = await currentUser()
+  const { userId } = auth()
+  const user = userId ? { id: userId } : null
   if (user) {
     const webhook = await db.discordWebhook.findFirst({
       where: {

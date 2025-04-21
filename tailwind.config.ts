@@ -131,6 +131,7 @@ const config = {
     },
   },
   plugins: [require('tailwindcss-animate')],
+  future: { enforceMaxContentSize: true },
 } satisfies Config
 
 // function addVariablesForColors({ addBase, theme }: any) {

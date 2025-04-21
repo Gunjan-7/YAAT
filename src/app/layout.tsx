@@ -6,6 +6,7 @@ import { ClerkProvider } from '@clerk/nextjs'
 import ModalProvider from '@/providers/modal-provider'
 import { Toaster } from '@/components/ui/sonner'
 import { BillingProvider } from '@/providers/billing-provider'
+import { PerformanceMonitorUI } from '@/components/global/performance-monitor-ui'
 
 const font = DM_Sans({ subsets: ['latin'] })
 
@@ -23,18 +24,24 @@ export default function RootLayout({
     <ClerkProvider
       publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
     >
-      <html lang="en">
-        <body className={font.className}>
+      <html lang="en" suppressHydrationWarning>
+        <body className={font.className} suppressHydrationWarning>
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"
-            enableSystem
+            enableSystem={false}
             disableTransitionOnChange
           >
             <BillingProvider>
               <ModalProvider>
                 {children}
                 <Toaster />
+                {/* Performance monitor - only visible in development with query param ?perf=true */}
+                <PerformanceMonitorUI 
+                  visible={process.env.NODE_ENV === 'development' && 
+                    typeof window !== 'undefined' && 
+                    window.location.search.includes('perf=true')} 
+                />
               </ModalProvider>
             </BillingProvider>
           </ThemeProvider>

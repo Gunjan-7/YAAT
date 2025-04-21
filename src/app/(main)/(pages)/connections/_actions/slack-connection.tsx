@@ -42,7 +42,8 @@ export const onSlackConnect = async (
 }
 
 export const getSlackConnection = async () => {
-  const user = await currentUser()
+  const { userId } = auth()
+  const user = userId ? { id: userId } : null
   if (user) {
     return await db.slack.findFirst({
       where: { userId: user.id },

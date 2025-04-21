@@ -1,24 +1,27 @@
 'use client'
-import React from 'react'
+import React, { useRef } from 'react'
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
-import { SparklesCore } from './sparkles'
+import { SparklesCore } from '@/components/global/sparkles-optimized'
+import { isLowEndDevice } from '@/lib/performance-utils'
 
 export function LampComponent() {
+  const isLowEnd = isLowEndDevice()
   return (
     <LampContainer>
       <motion.h1
-        initial={{ opacity: 0.5, y: 100 }}
+        initial={{ opacity: 0.5, y: isLowEnd ? 50 : 100 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{
-          delay: 0.3,
-          duration: 0.8,
-          ease: 'easeInOut',
+          delay: isLowEnd ? 0.2 : 0.3,
+          duration: isLowEnd ? 0.5 : 0.8,
+          ease: [0.25, 0.1, 0.25, 1],
+          type: 'tween'
         }}
-        className="mt-20 bg-gradient-to-br from-neutral-300 to-neutral-500 py-4 bg-clip-text text-center text-4xl font-medium tracking-tight text-transparent md:text-7xl"
+        className="mt-8 bg-gradient-to-br from-slate-300 to-slate-500 py-4 bg-clip-text text-center text-4xl font-medium tracking-tight text-transparent md:text-7xl"
+        style={{ willChange: 'transform, opacity' }} // Optimize for GPU acceleration
       >
-        Plans That
-        <br /> Fit You Best
+        <span>Build your automation in minutes</span>
       </motion.h1>
     </LampContainer>
   )
@@ -31,6 +34,9 @@ export const LampContainer = ({
   children: React.ReactNode
   className?: string
 }) => {
+  const containerRef = useRef<HTMLDivElement>(null)
+  // Reduce animation complexity on low-end devices
+  const isLowEnd = isLowEndDevice()
   return (
     <div
       className={cn(
@@ -42,10 +48,12 @@ export const LampContainer = ({
         <motion.div
           initial={{ opacity: 0.5, width: '15rem' }}
           whileInView={{ opacity: 1, width: '30rem' }}
+          viewport={{ once: true, amount: 0.3 }}
           transition={{
             delay: 0.3,
             duration: 0.8,
-            ease: 'easeInOut',
+            ease: [0.25, 0.1, 0.25, 1], // Custom easing curve for smoother animation
+            type: 'tween' // Use hardware acceleration for better performance
           }}
           style={{
             backgroundImage: `conic-gradient(var(--conic-position), var(--tw-gradient-stops))`,
@@ -58,10 +66,12 @@ export const LampContainer = ({
         <motion.div
           initial={{ opacity: 0.5, width: '15rem' }}
           whileInView={{ opacity: 1, width: '30rem' }}
+          viewport={{ once: true, amount: 0.3 }}
           transition={{
             delay: 0.3,
             duration: 0.8,
-            ease: 'easeInOut',
+            ease: [0.25, 0.1, 0.25, 1], // Custom easing curve for smoother animation
+            type: 'tween' // Use hardware acceleration for better performance
           }}
           style={{
             backgroundImage: `conic-gradient(var(--conic-position), var(--tw-gradient-stops))`,
@@ -81,6 +91,8 @@ export const LampContainer = ({
             delay: 0.3,
             duration: 0.8,
             ease: 'easeInOut',
+            // Use hardware acceleration for better performance
+            type: 'tween'
           }}
           className="absolute inset-auto z-30 h-36 w-64 -translate-y-[6rem] rounded-full bg-neutral-400 blur-2xl"
         ></motion.div>
@@ -91,18 +103,22 @@ export const LampContainer = ({
             delay: 0.3,
             duration: 0.8,
             ease: 'easeInOut',
+            // Use hardware acceleration for better performance
+            type: 'tween'
           }}
           className="absolute inset-auto z-50 h-0.5 w-[30rem] -translate-y-[7rem] bg-neutral-400 "
         ></motion.div>
 
         <div className="w-[40rem] h-40 relative">
           <SparklesCore
+            id="tsparticlesfullpage"
             background="transparent"
-            minSize={0.4}
-            maxSize={1}
-            particleDensity={1200}
+            minSize={0.6}
+            maxSize={1.4}
+            particleDensity={isLowEnd ? 50 : 100}
             className="w-full h-full"
             particleColor="#FFFFFF"
+            speed={isLowEnd ? 0.3 : 0.5}
           />
         </div>
 

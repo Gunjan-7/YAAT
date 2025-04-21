@@ -50,7 +50,8 @@ export const onNotionConnect = async (
   }
 }
 export const getNotionConnection = async () => {
-  const user = await currentUser()
+  const { userId } = auth()
+  const user = userId ? { id: userId } : null
   if (user) {
     const connection = await db.notion.findFirst({
       where: {

@@ -19,7 +19,8 @@ const Billing = async (props: Props) => {
     })
 
     const session = await stripe.checkout.sessions.listLineItems(session_id)
-    const user = await currentUser()
+    const { userId } = auth()
+  const user = userId ? { id: userId } : null
     if (user) {
       await db.user.update({
         where: {

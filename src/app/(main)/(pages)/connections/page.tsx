@@ -52,7 +52,8 @@ const Connections = async (props: Props) => {
     team_name: '',
   }
 
-  const user = await currentUser()
+  const { userId } = auth()
+  const user = userId ? { id: userId } : null
   if (!user) return null
 
   const onUserConnections = async () => {

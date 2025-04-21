@@ -7,7 +7,8 @@ import { currentUser } from '@clerk/nextjs'
 type Props = {}
 
 const Settings = async (props: Props) => {
-  const authUser = await currentUser()
+  const { userId } = auth()
+  const user = userId ? { id: userId } : null
   if (!authUser) return null
 
   const user = await db.user.findUnique({ where: { clerkId: authUser.id } })
